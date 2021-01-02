@@ -1,39 +1,37 @@
 from django.shortcuts import render
 from django.http import JsonResponse, Http404
 from .models import Blog, User
-import pymongo
+import pymongo, json
+from django.views.generic import TemplateView
+from django.contrib.auth.mixins import LoginRequiredMixin
 
-myClient = pymongo.MongoClient("mongodb+srv://mihirsheth:Mihirshethms0906@cluster0.eof6h.mongodb.net/learn?retryWrites=true&w=majority")
-db = myClient["learn"]
-mycol = db["blogs"]
+class HomeView(LoginRequiredMixin, TemplateView):
+    template_name = "blog/home.html"
+
+
 
 def blogs(request):
     '''
     View for fetching all blogs
     '''
-    print(db.list_collection_names())
-    
+    try:
+        blogs = Blog.objects.all()
+    except Exception:
+        raise Http404
+
     blog_list = []
-    for blog in mycol.find({},{"_id":0}):
-        blog_list.append(blog)
-    # try:
-    #     blogs = Blog.objects.all()
-    # except Exception:
-    #     raise Http404
 
-    # blog_list = []
-
-    # for blog in blogs:
-    #     blog_list.append({
-    #         'id' : blog.id,
-    #         'title': blog.blog_title,
-    #         'slug': blog.slug,
-    #         'date': blog.blog_date_created,
-    #         'author': blog.user.first_name,
-    #         'image_url': blog.blog_image.url,
-    #         'content' : blog.blog_content,
-    #         'likes' : blog.blog_likes
-    #     })
+    for blog in blogs:
+        blog_list.append({
+            'id' : blog.id,
+            'title': blog.blog_title,
+            'slug': blog.slug,
+            'date': blog.blog_date_created,
+            'author': blog.user.first_name,
+            'image_url': blog.blog_image.url,
+            'content' : blog.blog_content,
+            'likes' : blog.blog_likes
+        })
 
 
     return JsonResponse({
@@ -44,10 +42,10 @@ def get_blog(request, slug):
     '''
     View for fetching a single blog
     '''
-    # try:
-    blog = Blog.objects.get(slug=slug)
-    # except Blog.DoesNotExist:
-    #     raise Http404
+    try:
+        blog = Blog.objects.get(slug=slug)
+    except Blog.DoesNotExist:
+        raise Http404
 
     return JsonResponse({
         'blog': {
@@ -96,8 +94,19 @@ def get_user(request, pk):
         raise Http404
     
     user_blog_list = []
+    
     for blog in user.get_blogs.all():
         i=0
+        comments = []
+
+        for comment in blog.get_comments.all():
+            comments.append({
+                'date': comment.date,
+                'comment': json.dumps(comment.body),
+                'user' : comment.user.first_name
+            })
+        
+
         user_blog_list.append({
             f'{i}' : {
                 'id' : blog.id,
@@ -107,7 +116,8 @@ def get_user(request, pk):
                 'author': blog.user.first_name,
                 'image_url': blog.blog_image.url,
                 'content' : blog.blog_content,
-                'likes' : blog.blog_likes
+                'likes' : blog.blog_likes,
+                'comments' : comments,
             }
         })
         i+=1

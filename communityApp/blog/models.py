@@ -1,4 +1,5 @@
 from django.db import models
+from ckeditor.fields import RichTextField
 
 class User(models.Model):
     date_created = models.DateTimeField(auto_now_add=True)
@@ -20,7 +21,7 @@ class AuthToken(models.Model):
 class Blog(models.Model):
     blog_date_created = models.DateTimeField(auto_now_add=True)
     blog_title = models.CharField(max_length=250)
-    blog_content = models.TextField()
+    blog_content = RichTextField()
     blog_image = models.ImageField(upload_to='media/blog/',null=True)
     blog_likes = models.IntegerField(default=0)
     slug = models.SlugField(max_length=150,default='')
@@ -39,7 +40,7 @@ class Blog(models.Model):
 
 class Comment(models.Model):
     date = models.DateTimeField(auto_now_add=False, default=None)
-    body = models.CharField(max_length=250, default='')
+    body = RichTextField()
     likes = models.IntegerField(default=0)
     user = models.ForeignKey(User, related_name='get_user', on_delete=models.CASCADE, null=True)
     blog = models.ForeignKey(Blog,related_name='get_comments', on_delete=models.CASCADE, null=True)

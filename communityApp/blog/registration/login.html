@@ -1,0 +1,17 @@
+{% extends 'blog/base.html' %}
+
+{% block title %}Login Page{% endblock title %}
+
+{% block content %} 
+    <h2>Login</h2>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Login</button>
+    </form>
+    <br>
+    <p><strong>-- OR --</strong></p>
+    <button class="btn btn-primary">
+        <a href="{% url 'social:begin' 'facebook' %}">Login with Facebook</a>
+    </button>
+{% endblock content %} 
