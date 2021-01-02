@@ -82,6 +82,7 @@ AUTHENTICATION_BACKENDS = (
     'social_core.backends.twitter.TwitterOAuth',
     'social_core.backends.github.GithubOAuth2',
     'social_core.backends.google.GoogleOAuth2',
+    'social_core.backends.instagram.InstagramOAuth2',
 
     'django.contrib.auth.backends.ModelBackend',
 )
@@ -148,11 +149,22 @@ CKEDITOR_UPLOAD_PATH = "uploads/"
 LOGIN_URL = 'login'
 LOGOUT_URL = 'logout'
 LOGIN_REDIRECT_URL = 'home'
+SOCIAL_AUTH_LOGIN_REDIRECT_URL = 'home'
 
 SOCIAL_AUTH_RAISE_EXCEPTIONS = False
 
 SOCIAL_AUTH_FACEBOOK_KEY = '407672623883891'  # App ID
 SOCIAL_AUTH_FACEBOOK_SECRET = '93ca950d3bb5e73e0f278d257fbf0514'  # App Secret
+SOCIAL_AUTH_FACEBOOK_SCOPE = ['email', 'user_link'] # add this
+SOCIAL_AUTH_FACEBOOK_PROFILE_EXTRA_PARAMS = {       # add this
+  'fields': 'id, name, email, picture.type(large), link'
+}
+SOCIAL_AUTH_FACEBOOK_EXTRA_DATA = [                 # add this
+    ('name', 'name'),
+    ('email', 'email'),
+    ('picture', 'picture'),
+    ('link', 'profile_url'),
+]
 
 SOCIAL_AUTH_GITHUB_KEY = 'acc8727c34adff911fde'
 SOCIAL_AUTH_GITHUB_SECRET = '3a5ec67c6a9dad5cc168b8c56c7c56e5fd1d2f16' 

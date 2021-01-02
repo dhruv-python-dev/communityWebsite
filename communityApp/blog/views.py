@@ -1,15 +1,17 @@
 from django.shortcuts import render
 from django.http import JsonResponse, Http404
 from .models import Blog, User
+from django.contrib.auth.models import User as U
 import pymongo, json
 from django.views.generic import TemplateView
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth import authenticate
+from django.contrib.auth.decorators import login_required
 
 class HomeView(LoginRequiredMixin, TemplateView):
     template_name = "blog/home.html"
 
-
-
+@login_required(redirect_field_name='next')
 def blogs(request):
     '''
     View for fetching all blogs
@@ -38,6 +40,7 @@ def blogs(request):
         'blogs':blog_list,
     }, safe=False)
 
+@login_required
 def get_blog(request, slug):
     '''
     View for fetching a single blog
@@ -60,6 +63,7 @@ def get_blog(request, slug):
         }
     })
 
+@login_required
 def users(request):
     '''
     View for fetching all users
@@ -84,6 +88,7 @@ def users(request):
         'users': user_list,
     }, safe=False)
 
+@login_required
 def get_user(request, pk):
     '''
     View for fetching a single blog

@@ -21,7 +21,7 @@ from django.conf import settings
 
 
 urlpatterns = [
-    path('', blog_views.HomeView.as_view(), name='home'),
+    path('home/', blog_views.HomeView.as_view(), name='home'),
 
     path('admin/', admin.site.urls),
     path('blog/',include('blog.urls')),
