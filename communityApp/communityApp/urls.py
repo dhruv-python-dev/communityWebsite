@@ -21,6 +21,7 @@ from django.conf import settings
 
 
 urlpatterns = [
+    path('grappelli/', include('grappelli.urls')),
     path('home/', blog_views.HomeView.as_view(), name='home'),
 
     path('admin/', admin.site.urls),
