@@ -1,5 +1,6 @@
 from django.db import models
 from ckeditor.fields import RichTextField
+import math as m
 
 class User(models.Model):
     date_created = models.DateTimeField(auto_now_add=True)
@@ -33,6 +34,10 @@ class Blog(models.Model):
     def liked(self):
         self.blog_likes +=1
         return self.blog_likes
+
+    @property
+    def get_read_time(self):
+        return m.floor(len(self.blog_content.split(' '))/120)
 
     def __str__(self):
         return self.blog_title

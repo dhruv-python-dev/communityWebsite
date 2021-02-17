@@ -8,6 +8,8 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth import authenticate
 from django.contrib.auth.decorators import login_required
 
+from .serializers import BlogSerializer
+
 class HomeView(LoginRequiredMixin, TemplateView):
     template_name = "blog/home.html"
 
@@ -18,27 +20,11 @@ def blogs(request):
     '''
     try:
         blogs = Blog.objects.all()
-    except Exception:
+        print(blogs[0].get_read_time)
+        serializer = BlogSerializer(blogs,many=True)
+        return JsonResponse(serializer.data,safe=False)
+    except Exception as e:
         raise Http404
-
-    blog_list = []
-
-    for blog in blogs:
-        blog_list.append({
-            'id' : blog.id,
-            'title': blog.blog_title,
-            'slug': blog.slug,
-            'date': blog.blog_date_created,
-            'author': blog.user.first_name,
-            'image_url': blog.blog_image.url,
-            'content' : blog.blog_content,
-            'likes' : blog.blog_likes
-        })
-
-
-    return JsonResponse({
-        'blogs':blog_list,
-    }, safe=False)
 
 @login_required
 def get_blog(request, slug):
