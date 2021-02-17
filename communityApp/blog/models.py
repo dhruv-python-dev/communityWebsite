@@ -1,5 +1,7 @@
 from django.db import models
 from ckeditor.fields import RichTextField
+import readtime
+
 
 class User(models.Model):
     date_created = models.DateTimeField(auto_now_add=True)
@@ -47,5 +49,17 @@ class Comment(models.Model):
 
     def __str__(self):
         return self.user.email
+   
+class post(models.Models):
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, default=1)
+    title = models.CharField(max_length=120)
+    content = models.TextField()
+
+    def get_readtime(self):
+        result = readtime.of_text(self.content)
+        return result.text 
+    
+    def __str__(self):
+        return self.title    
     
 
