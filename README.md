@@ -15,7 +15,13 @@ setup virtual enviornment
   
 activate the enviornment 
                 
-    Win/=> {name}\Scripts\activate , linux/=> source {name}/bin/activate
+Win
+   
+    {name}\Scripts\activate
+
+linux
+    
+    source {name}/bin/activate
   
 install the requirements 
 
