@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from django.http import JsonResponse, Http404
-from .models import Blog, User
+from .models import Blog, User, Comment
 from django.contrib.auth.models import User as U
 import pymongo, json
 from django.views.generic import TemplateView
@@ -8,7 +8,10 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth import authenticate
 from django.contrib.auth.decorators import login_required
 
-from .serializers import BlogSerializer
+from .serializers import BlogSerializer, CommentSerializer
+from rest_framework import APIView
+from rest_framework.response import Response
+from rest_framework import status   
 
 class HomeView(LoginRequiredMixin, TemplateView):
     template_name = "blog/home.html"
@@ -122,3 +125,16 @@ def get_user(request, pk):
             'blogs' : user_blog_list,
         }
     })
+
+
+
+
+class Commentlist(APIView):
+    def GET(self, request):
+        comments1 = Comment.objects.all()
+        serializer = CommentSerializer(comments1, many=True)
+        return Response(serializer.data)
+
+    def POST(self):
+        pass
+
