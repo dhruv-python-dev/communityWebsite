@@ -26,13 +26,14 @@ def blogs(request):
     except Exception as e:
         raise Http404
 
-@login_required
+# @login_required
 def get_blog(request, slug):
     '''
     View for fetching a single blog
     '''
     try:
         blog = Blog.objects.get(slug=slug)
+        print(blog.comments)
     except Blog.DoesNotExist:
         raise Http404
 
@@ -45,7 +46,8 @@ def get_blog(request, slug):
             'author': blog.user.first_name,
             'image_url': blog.blog_image.url,
             'content' : blog.blog_content,
-            'likes' : blog.blog_likes
+            'likes' : blog.blog_likes,
+            'comments' : blog.comments
         }
     })
 
