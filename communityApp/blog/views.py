@@ -33,7 +33,6 @@ def get_blog(request, slug):
     '''
     try:
         blog = Blog.objects.get(slug=slug)
-        print(blog.comments)
     except Blog.DoesNotExist:
         raise Http404
 
