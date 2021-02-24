@@ -35,5 +35,7 @@ urlpatterns = [
 
     path('ckeditor/', include('ckeditor_uploader.urls')),
     path('oauth/', include('social_django.urls', namespace='social')),
+    
+    path('Comment/', blog_views.Commentlist.as_view()),#pull
 ]
 

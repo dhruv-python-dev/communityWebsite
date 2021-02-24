@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Blog
+from .models import Blog, Comment
 
 class BlogSerializer(serializers.ModelSerializer):
     class Meta:
@@ -18,3 +18,23 @@ class BlogSerializer(serializers.ModelSerializer):
         instance.slug = validated_data.get('slug', instance.slug)
         instance.user = validated_data.get('user', instance.user)
         return instance
+
+
+
+# Pull from here
+
+class CommentSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Comment
+        fields = '__all__'
+    
+    # def create(self,validated_data):
+    #     return Comment(**validated_data)
+
+    # def update(self, instance, validated_data):
+    #     instance.date = validated_data.get('date',instance.date)
+    #     instance.body = validated_data.get('body',instance.body)
+    #     instance.likes =validated_data.get('likes',instance.likes)
+    #     instance.user = validated_data.get('user',instance.user)
+    #     instance.blog = validated_data.get('blog',instance.blog)
+    #     return instance

@@ -40,7 +40,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'blog.apps.BlogConfig',
-    'channels',
+    #'channels',
     'chatapp.apps.ChatappConfig',
     'ckeditor',
     'social_django',
