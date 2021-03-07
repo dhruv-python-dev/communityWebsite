@@ -51,7 +51,6 @@ def users(request):
     try:
         users = User.objects.all()
     except Exception as e:
-        print(e)
         raise Http404
 
     user_list = []

@@ -1,10 +1,32 @@
 from rest_framework import serializers
-from .models import Blog
+from .models import Blog, Comment
 
-class BlogSerializer(serializers.ModelSerializer):
+class CustomSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = None
+        related_fields = None
+    
+    def get_field_names(self, declared_fields, info):
+        expanded_fields = super(CustomSerializer, self).get_field_names(declared_fields, info)
+
+        if getattr(self.Meta, 'extra_fields', None):
+            return expanded_fields + self.Meta.related_fields
+        else:
+            return expanded_fields
+
+class BlogSerializer(CustomSerializer):
+    username = serializers.SerializerMethodField()
+    user_email = serializers.SerializerMethodField()
+
+    def get_username(self, obj: Blog):
+        return f"{obj.user.first_name} {obj.user.last_name}"
+    
+    def get_user_email(self, obj: Blog):
+        return obj.user.email
     class Meta:
         model = Blog
-        fields = '__all__'
+        exclude = ['user', ]
+        related_fields = ['username']
     
     def create(self, validated_data):
         return Blog.objects.create(**validated_data)
@@ -19,3 +41,6 @@ class BlogSerializer(serializers.ModelSerializer):
         instance.user = validated_data.get('user', instance.user)
         instance.save()
         return instance
+
+class CommentSerializer(CustomSerializer):
+    pass
