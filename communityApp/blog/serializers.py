@@ -1,3 +1,19 @@
+'''
+Author: "Dhruv Patel"
+copyright: "Copyright 2021"
+credits : ["Dhruv Patel", ]
+license: "Proprietary"
+version : "0.0.1"
+maintainer: "Dhruv Patel"
+email: "dhruvpatel.pydev@gmail.com"
+status: "Production"
+Filename: "serializers.py"
+File Description: ""
+Date created: 01/01/2021
+Date last modified: 07/03/2021
+Python Version: 3.8.5
+'''
+
 from rest_framework import serializers
 from .models import Blog, Comment
 
