@@ -40,6 +40,7 @@ class BlogSerializer(CustomSerializer):
     
     def get_user_email(self, obj: Blog):
         return obj.user.email
+    
     class Meta:
         model = Blog
         related_fields = ['username', 'user_email']
@@ -67,6 +68,7 @@ class CommentSerializer(CustomSerializer):
 
     def get_related_blog_id(self, obj: Comment):
         return obj.blog.id
+    
     class class Meta:
         model = Comment
         related_fields = ['username', 'related_blog_id', ]
