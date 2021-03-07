@@ -20,34 +20,26 @@ def blogs(request):
     '''
     try:
         blogs = Blog.objects.all()
-        print(blogs[0].get_read_time)
         serializer = BlogSerializer(blogs,many=True)
         return JsonResponse(serializer.data,safe=False)
     except Exception as e:
         raise Http404
 
-# @login_required
+@login_required
 def get_blog(request, slug):
     '''
     View for fetching a single blog
     '''
     try:
         blog = Blog.objects.get(slug=slug)
+        serializer = BlogSerializer(blog)
+
     except Blog.DoesNotExist:
         raise Http404
 
     return JsonResponse({
-        'blog': {
-            'id' : blog.id,
-            'title': blog.blog_title,
-            'slug': blog.slug,
-            'date': blog.blog_date_created,
-            'author': blog.user.first_name,
-            'image_url': blog.blog_image.url,
-            'content' : blog.blog_content,
-            'likes' : blog.blog_likes,
-            'comments' : blog.comments
-        }
+        serializer.data,
+        safe = False   
     })
 
 @login_required

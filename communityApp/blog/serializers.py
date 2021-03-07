@@ -7,7 +7,7 @@ class BlogSerializer(serializers.ModelSerializer):
         fields = '__all__'
     
     def create(self, validated_data):
-        return Blog(**validated_data)
+        return Blog.objects.create(**validated_data)
 
     def update(self, instance, validated_data):
         instance.blog_date_created = validated_data.get('blog_date_created', instance.blog_date_created)
@@ -17,4 +17,5 @@ class BlogSerializer(serializers.ModelSerializer):
         instance.blog_likes = validated_data.get('blog_likes', instance.blog_likes)
         instance.slug = validated_data.get('slug', instance.slug)
         instance.user = validated_data.get('user', instance.user)
+        instance.save()
         return instance
