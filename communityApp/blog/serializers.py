@@ -4,6 +4,7 @@ from .models import Blog, Comment
 class CustomSerializer(serializers.ModelSerializer):
     class Meta:
         model = None
+        fields = "__all__"
         related_fields = None
     
     def get_field_names(self, declared_fields, info):
@@ -25,8 +26,7 @@ class BlogSerializer(CustomSerializer):
         return obj.user.email
     class Meta:
         model = Blog
-        exclude = ['user', ]
-        related_fields = ['username']
+        related_fields = ['username', 'user_email']
     
     def create(self, validated_data):
         return Blog.objects.create(**validated_data)
@@ -43,4 +43,26 @@ class BlogSerializer(CustomSerializer):
         return instance
 
 class CommentSerializer(CustomSerializer):
-    pass
+    username = serializers.SerializerMethodField()
+    related_blog_id = serializers.SerializerMethodField()
+
+    def get_username(self, obj: Comment):
+        return f"{obj.user.first_name} {obj.user.last_name}"
+
+    def get_related_blog_id(self, obj: Comment):
+        return obj.blog.id
+    class class Meta:
+        model = Comment
+        related_fields = ['username', 'related_blog_id', ]
+    
+    def create(self, validated_data):
+        return Comment.objects.create(**validated_data)
+
+    def update(self, instance, validated_data):
+        instance.date = validated_data.get('date', instance.date)
+        instance.body = validated_data.get('body', instance.body)
+        instance.likes = validated_data.get('likes', instance.likes)
+        instance.user = validated_data.get('user', instance.user)
+        instance.blog = validated_data.get('blog', instance.blog)
+        instance.save()
+        return instance
