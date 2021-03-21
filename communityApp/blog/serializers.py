@@ -17,12 +17,9 @@ Python Version: 3.8.5
 from rest_framework import serializers
 from .models import Blog, Comment
 
+
 class CustomSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = None
-        fields = "__all__"
-        related_fields = None
-    
+
     def get_field_names(self, declared_fields, info):
         expanded_fields = super(CustomSerializer, self).get_field_names(declared_fields, info)
 
@@ -31,20 +28,22 @@ class CustomSerializer(serializers.ModelSerializer):
         else:
             return expanded_fields
 
+
 class BlogSerializer(CustomSerializer):
     username = serializers.SerializerMethodField()
     user_email = serializers.SerializerMethodField()
 
     def get_username(self, obj: Blog):
         return f"{obj.user.first_name} {obj.user.last_name}"
-    
+
     def get_user_email(self, obj: Blog):
         return obj.user.email
-    
+
     class Meta:
         model = Blog
+        fields = "__all__"
         related_fields = ['username', 'user_email']
-    
+
     def create(self, validated_data):
         return Blog.objects.create(**validated_data)
 
@@ -59,6 +58,7 @@ class BlogSerializer(CustomSerializer):
         instance.save()
         return instance
 
+
 class CommentSerializer(CustomSerializer):
     username = serializers.SerializerMethodField()
     related_blog_id = serializers.SerializerMethodField()
@@ -68,11 +68,12 @@ class CommentSerializer(CustomSerializer):
 
     def get_related_blog_id(self, obj: Comment):
         return obj.blog.id
-    
-    class class Meta:
+
+    class Meta:
         model = Comment
+        fields = "__all__"
         related_fields = ['username', 'related_blog_id', ]
-    
+
     def create(self, validated_data):
         return Comment.objects.create(**validated_data)
 

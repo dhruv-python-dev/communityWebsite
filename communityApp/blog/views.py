@@ -20,9 +20,10 @@ def blogs(request):
     '''
     try:
         blogs = Blog.objects.all()
-        serializer = BlogSerializer(blogs,many=True)
-        return JsonResponse(serializer.data,safe=False)
+        serializer = BlogSerializer(blogs, many=True)
+        return JsonResponse(serializer.data, safe=False)
     except Exception as e:
+        print(e)
         raise Http404
 
 @login_required
@@ -37,10 +38,7 @@ def get_blog(request, slug):
     except Blog.DoesNotExist:
         raise Http404
 
-    return JsonResponse({
-        data=serializer.data, 
-        safe=False
-    })
+    return JsonResponse(data=serializer.data, safe=False)
 
 @login_required
 def users(request):
